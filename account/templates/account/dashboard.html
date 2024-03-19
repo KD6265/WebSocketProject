@@ -1,0 +1,108 @@
+{% extends 'account/base.html' %}
+
+{% comment %} {% extends 'account/base.html' %} {% endcomment %}
+{% comment %} 
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block css %}
+<style>
+    #qrcode {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Dashboard</h2>
+<p>Hello, {{ user.username }}!</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button id="group-submit" type="button">Join</button>
+</form>
+<a href="{% url 'logout' %}">Logout</a>
+<div id="qrcode"></div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode"></script>
+<script>
+    document.getElementById('group-submit').addEventListener('click', function() {
+        const group = document.getElementById('id_name').value;
+        if (group) {
+            console.log("Connecting...");
+            const url = ('http://' + window.location.host + '/chats/' + group);
+            // const url = location.replace('http://' + window.location.host + '/chats/' + group);
+            console.log('URL: ', url);
+            generateQRCode(url);
+        } else {
+            alert("Please enter a valid group name");
+        }
+    });
+
+    function generateQRCode(url) {
+        const qrCodeDiv = document.getElementById('qrcode');
+        qrCodeDiv.innerHTML = ''; // Clear previous QR code if exists
+        const qrCode = new QRCode(qrCodeDiv, {
+            text: url,
+            width: 200,
+            height: 200,
+        });
+    }
+</script>
+{% endblock %}   {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+# ChatApp/views.py code for the chats app
+
+ {% comment %} {% extends 'account/base.html' %} {% endcomment %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Dashboard</h2>
+<p>Hello, {{ user.username }}!</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button id="group-submit" type="button">join</button>
+</form>
+<a href="{% url 'logout' %}">Logout</a>
+<script>
+    document.getElementById('group-submit').addEventListener('click',function(){
+    const group =document.getElementById('id_name').value;
+    if(group){
+        console.log("connecting...");
+        location.replace('http://' + window.location.host + '/chats/' + group);
+       
+    }else{  
+        alert("Please enter a valid group name"); 
+    };    
+    console.log(ws);
+    console.log(group);
+    });
+    
+</script>
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/qrcode.min.js"></script> {% endcomment %}
+{% endblock %}
+
+{% block js %}
+{% endblock %} 
