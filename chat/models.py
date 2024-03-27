@@ -7,7 +7,7 @@ class Chat(models.Model):
     content  = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
     group = models.ForeignKey('Group', on_delete=models.CASCADE,)
-
+    upload = models.FileField(blank=True, null=True, upload_to='uploads/'),
     def __str__(self):
         return self.content[:50] + '...' if len(self.content) > 53 else self.content
 
