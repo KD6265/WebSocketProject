@@ -203,12 +203,12 @@
           {% endif %}
           {% comment %} {% if message.user.profile_image %} {% endcomment %}
           <div class="msg-img" style="background-image: url({{message.user.profile_image.url|default_if_none:''}})">
-            {% comment %} <div class="msg-img" style="background-image: url('{{ message.user.profile_image.url }}')"></div> {% endcomment %}
-           {% comment %} {% else %} {% endcomment %}
-            <!-- Handle the case where the profile image is not available -->
-            {% comment %} <div class="default-img"></div> {% endcomment %}
+          {% comment %} <div class="msg-img" style="background-image: url('{{ message.user.profile_image.url }}')"></div> {% endcomment %}
+          {% comment %} {% else %} {% endcomment %}
+          <!-- Handle the case where the profile image is not available -->
+          {% comment %} <div class="default-img"></div> {% endcomment %}
           {% comment %} {% endif %} {% endcomment %}
-            {% comment %} <div class="msg-img" style="background-image: url({{message.user.profile_image.url|default_if_none:''}})"> {% endcomment %}
+          {% comment %} <div class="msg-img" style="background-image: url({{message.user.profile_image.url|default_if_none:''}})"> {% endcomment %}
             </div>
             <div class="msg-bubble">
               <div class="msg-info">
@@ -216,7 +216,8 @@
                 <div class="msg-info-time">{{message.timestamp}}</div>
               </div>
               <div class="msg-text">
-                {{ message|default_if_none:"Hi, welcome to SimpleChat! Go ahead and send me a message. 😄" }} 
+                {{ message|default_if_none:"Hi, welcome to SimpleChat! Go ahead and send me a message. 😄" }}
+                {{ message.document|default_if_none:"Hi, welcome to SimpleChat! Go ahead and send me a message. 😄" }}
               </div>
             </div>
           </div>
@@ -241,6 +242,7 @@
       
         <form class="msger-inputarea">
           <input type="text" class="msger-input"  id='chat-message-input' placeholder="Enter your message...">
+          <input type="file" class="form-control" name="" id="chat-file-input" placeholder="File Upload"  aria-describedby="fileHelpId"/>          
           <button type="button" id="chat-message-submit" class="msger-send-btn">Send</button>
           </form>
         
@@ -273,11 +275,12 @@ ws.onmessage = function(event) {
     console.log(data.user,userName)
     console.log(userName)
     console.log(data.profile_image)
+    console.log(data.image)
     
     if (data.user == userName){
-      addToChatLog(userName, data.profile_image ,"right",data.msg);
+      addToChatLog(userName, data.profile_image ,"right",data.msg,data.image,data.filetype);
     }else{
-      addToChatLog(data.user, data.profile_image,"left",data.msg);
+      addToChatLog(data.user, data.profile_image,"left",data.msg,data.image,data.filetype);
     }
     
 }
@@ -286,21 +289,83 @@ ws.onclose = function(event){
     console.log('connection close from server' ,event)
 }
 
-document.getElementById('chat-message-submit').addEventListener('click',function(){
-    let msg = document.getElementById('chat-message-input').value;
-    console.log('type of msg',typeof(msg));
-    if(!msg) return false;
-    console.log('sending message to the server : ', msg);
-    //ws.send(msg);
-    ws.send(JSON.stringify({msg: msg}));
-    //addToChatLog(userName, PERSON_IMG,"right",msg);
-    console.log('riight call')
-    console.log('sending  ', msg);
-    document.getElementById('chat-message-input').value='';
-    console.log('sending message to the server**** : ', msg);
-})
+document.getElementById('chat-message-submit').addEventListener('click', function() {
+  let msg = document.getElementById('chat-message-input').value;
+  let fileInput = document.getElementById('chat-file-input');
+  let file = fileInput.files[0];
 
-function addToChatLog(name, img, side, msg) {
+  // Check if neither a message nor a file is available
+  if (!msg && !file) {
+      console.error('No message or file selected.');
+      return;
+  }
+
+  // Check if both message and file are available
+  if (msg && file) {
+      let reader = new FileReader();
+      reader.onload = function(event) {
+          let imageData = event.target.result;
+          console.log(imageData);
+          fileName =file.name
+          fileType =fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2);
+
+          // Create a JSON object containing the message and image data
+          let jsonData = {
+              'msg': msg,
+              'image': imageData,
+              'filename':fileName,
+              'filetype':fileType,
+          };
+
+          // Send the JSON object over WebSocket
+          ws.send(JSON.stringify(jsonData));
+          // Reset the input fields
+          document.getElementById('chat-message-input').value = '';
+          fileInput.value='';
+
+          console.log('Message and image data sent to the server:', jsonData);
+      };
+      reader.readAsDataURL(file);
+  } else if (msg) {
+      // Send only the message if no file is available
+      ws.send(JSON.stringify({ msg: msg,
+      'image': "",
+      'filename': "" }));
+      console.log("Only text was send");
+      document.getElementById('chat-message-input').value = '';
+
+      console.log('Message sent to the server:', msg);
+  } else if (file) {
+      let reader = new FileReader();
+      reader.onload = function(event) {
+          let imageData = event.target.result;
+          
+          // Create a JSON object containing the image data
+          fileName =file.name
+          fileType =fileName.slice((fileName.lastIndexOf(".") - 1 >>> 0) + 2);
+          console.log('File Type ', fileType);
+          let jsonData = {
+              'msg':'',
+              'image': imageData,
+              'filename':  fileName,
+              'filetype':fileType,
+          };
+
+
+          // Send the JSON object over WebSocket
+          ws.send(JSON.stringify(jsonData));
+          fileInput.value='';
+          msg.value="";
+          msg.
+
+          console.log('Image data sent to the server:', jsonData);
+      };
+      reader.readAsDataURL(file);
+  }
+});
+
+
+function addToChatLog(name, img, side, msg,file = null,filetype = null,) {
     //   Simple solution for small apps
     const msgHTML = `
       <div class="msg ${side}-msg">
@@ -313,6 +378,8 @@ function addToChatLog(name, img, side, msg) {
           </div>
   
           <div class="msg-text">${msg}</div>
+          ${file ? renderFile(file,filetype) : ''}
+           
         </div>
       </div>
     `;
@@ -320,6 +387,17 @@ function addToChatLog(name, img, side, msg) {
     msgerChat.insertAdjacentHTML("beforeend", msgHTML);
     msgerChat.scrollTop += 500;
   } 
+  function renderFile(file,filetype) {
+    if (filetype == "image" || filetype =='png'||filetype =='jpeg') {
+        return `<img class="msg-image" src="${file}" alt="Image">`;
+    } else if (filetype == 'pdf') {
+        return `<embed class="msg-file" src="${file}" type="application/pdf" width="100%" height="600px" />`;
+    } else if (filetype=='audio') {
+        return `<audio class="msg-audio" controls><source src="${file}" type="${filetype}"></audio>`;
+    } else {
+        return `<a href="${file}" target="_blank" rel="noopener noreferrer">${file.name}</a>`;
+    }
+}
 function generateChatLink(chatContent) {
   var baseUrl = 'https://example.com/share?content=';
   var encodedContent = encodeURIComponent(chatContent);

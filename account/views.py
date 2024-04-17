@@ -12,6 +12,10 @@ from django.contrib import messages
 
 
 
+def index(request):
+    return render(request, 'index.html')
+
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST, request.FILES) # instance=request.user

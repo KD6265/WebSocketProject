@@ -26,6 +26,7 @@ class MyAsyncConsumer(AsyncConsumer):
     async def websocket_receive(self, event):
         print('message received from client', event)
         message = event['text']
+        # fi = event["file"]
         print(type(message))
         print(message)
         data = json.loads(message)
@@ -37,8 +38,9 @@ class MyAsyncConsumer(AsyncConsumer):
         # await database_sync_to_async(self.scope["session"].save)()
         if self.scope['user'].is_authenticated:
             user = self.scope['user']
-            # send to only this room/group if the user is authenticated else broadcast it to all users
-            chat = Chat(content=data['msg'], group=group,user=user)
+            # send to only this room/group if the user is authenticated else broadcast it to all 
+            
+            chat = Chat(content=data['msg'],document=data['image'] ,group=group,user=user)
             await sync_to_async(chat.save)()    
             user = self.scope['user'].username
             profile_image = self.scope['user'].profile_image.url
