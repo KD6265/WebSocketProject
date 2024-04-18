@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django_filters',
     'api',
     'qr_code',
-    'django_social_share'
+    'django_social_share',
+    'pricing',
     
 ]
 

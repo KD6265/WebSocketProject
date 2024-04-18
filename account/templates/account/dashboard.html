@@ -1,81 +1,9 @@
 {% extends 'account/base.html' %}
-
-{% comment %} {% extends 'account/base.html' %} {% endcomment %}
-{% comment %} 
+{% load tz %}
 {% block title %}
 Dashboard
 {% endblock %}
-
 {% block css %}
-<style>
-    #qrcode {
-        margin-top: 20px;
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-<h2>Welcome to the Dashboard</h2>
-<p>Hello, {{ user.username }}!</p>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button id="group-submit" type="button">Join</button>
-</form>
-<a href="{% url 'logout' %}">Logout</a>
-<div id="qrcode"></div>
-
-
-{% endblock %}
-
-{% block js %}
-<script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode"></script>
-<script>
-    document.getElementById('group-submit').addEventListener('click', function() {
-        const group = document.getElementById('id_name').value;
-        if (group) {
-            console.log("Connecting...");
-            const url = ('http://' + window.location.host + '/chats/' + group);
-            // const url = location.replace('http://' + window.location.host + '/chats/' + group);
-            console.log('URL: ', url);
-            generateQRCode(url);
-        } else {
-            alert("Please enter a valid group name");
-        }
-    });
-
-    function generateQRCode(url) {
-        const qrCodeDiv = document.getElementById('qrcode');
-        qrCodeDiv.innerHTML = ''; // Clear previous QR code if exists
-        const qrCode = new QRCode(qrCodeDiv, {
-            text: url,
-            width: 200,
-            height: 200,
-        });
-    }
-</script>
-{% endblock %}   {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-# ChatApp/views.py code for the chats app
-
- {% comment %} {% extends 'account/base.html' %} {% endcomment %}
-
-{% block title %}
-Dashboard
-{% endblock %}
-
-{% block css %}
-
 body {
     font-family: Arial, sans-serif;
     font-size: 16px;
@@ -214,56 +142,6 @@ p {
 {% endblock %}
 
 {% block content %}
-{% comment %} <h2>Welcome to the Dashboard</h2> {% endcomment %}
-{% comment %} <div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <h2>Welcome to the Dashboard</h2>
-            <p>Hello, {{ user.username }}!</p>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button id="group-submit" type="button" class="btn btn-primary">Join</button>
-            </form>
-            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
-        </div>
-    </div>
-</div> {% endcomment %}
-<!-- This snippet uses Font Awesome 5 Free as a dependency. You can download it at fontawesome.io! -->
-
-{% comment %} <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-          <div class="card card-signin my-5">
-            <div class="card-body">
-              <h5 class="card-title text-center">Sign In</h5>
-              <form class="form-signin">
-                <div class="form-label-group">
-                  <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                  <label for="inputEmail">Email address</label>
-                </div>
-  
-                <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                  <label for="inputPassword">Password</label>
-                </div>
-  
-                <div class="custom-control custom-checkbox mb-3">
-                  <input type="checkbox" class="custom-control-input" id="customCheck1">
-                  <label class="custom-control-label" for="customCheck1">Remember password</label>
-                </div>
-                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
-                <hr class="my-4">
-                <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
-                <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</body> {% endcomment %}
 <div class="Header">
     <div class="Header-background"></div>
     <div class="Header-content">
@@ -277,6 +155,7 @@ p {
       </div>
     </div>
   </div>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">User Dashboard</a>
@@ -321,7 +200,30 @@ p {
             <!-- Main Content Area -->
 <div class="col-md-9">
     <h2>Welcome to Your Dashboard!</h2>
-    
+    {% comment %} {% if user.profile.selected_plan.prices.remain_time > 0 %}
+    Remaining days: {{ user.profile.selected_plan.prices.remain_time }}
+{% else %}
+    Subscription has expired.
+{% endif %}  {% endcomment %}
+{% if user.profile.selected_plan %}
+    {% for price in user.profile.selected_plan.prices.all %}
+        {% if user.profile.remain_time > 0 %}
+            Remaining days for{{price.plan.name}} : {{ price.currency }}{{ price.get_price }} expire in: {{ user.profile.remain_time }} Days
+        {% else %}
+            Subscription for {{price.plan.name}} - {{ price.currency }}-{{ price.get_price }} plan has expired.
+        {% endif %}
+    {% endfor %}
+{% else %}
+    No plan selected.
+{% endif %}
+
+    <p>Hello, {{ user.username }}!</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button id="group-submit" type="button" class="btn btn-primary">Join</button>
+            </form>
+            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
     <div class="row mt-4">
         <div class="col-md-4">
             <div class="card">
