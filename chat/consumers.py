@@ -15,6 +15,8 @@ class MyAsyncConsumer(AsyncConsumer):
         print('channel name...', self.channel_name)
         self.group_name = self.scope['url_route']['kwargs']['groupName']
         print('Group Name : ', self.group_name)
+        # if self.scope['user'].is_authenticated and self.scope['user'].selected_plan.chat_room_limit == 0 or  self.scope['user'].selected_plan.chat_room_limit < self.scope['user'].selected_plan.chat_room_limit :
+        #     user = self.scope['user']
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.send({
             'type': 'websocket.accept',
@@ -26,7 +28,6 @@ class MyAsyncConsumer(AsyncConsumer):
     async def websocket_receive(self, event):
         print('message received from client', event)
         message = event['text']
-        # fi = event["file"]
         print(type(message))
         print(message)
         data = json.loads(message)

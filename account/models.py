@@ -11,7 +11,7 @@ class CustomUser(AbstractUser):
     
 class UserProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,related_name="profile")
-    selected_plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True,related_name="selected_plan")
+    selected_plan = models.ForeignKey(Plan,on_delete=models.CASCADE, null=True, blank=True,related_name="selected_plan")
     active = models.BooleanField(default=False)
     end_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -26,14 +26,13 @@ class UserProfile(models.Model):
             return 0
         remaining_days = (self.end_date - now).days
         return remaining_days if remaining_days > 0 else 0
-    
-    # def update_user_profile_status(self):
-    #     if self.remain_time is not None:
-    #         remaining_days = self.remain_time
-    #         print('remaining days : ',remaining_days)
-    #     if remaining_days <= 0:
-    #         self.active = False
-    #         self.save()
+    @property
+    def remain_chat_room_limit(self):
+        if self.selected_plan is None:  
+            return 0    
+        else:
+            return self.selected_plan.chat_room_limit - self.user.chat_rooms.count()
+        
     def update_user_profile_status(self):
         if self.remain_time is not None:
             remaining_days = self.remain_time

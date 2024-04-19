@@ -1,4 +1,4 @@
-{% extends 'account/base.html' %}
+{% extends 'base/base.html' %}
 
 {% block title %}
 Login
@@ -6,7 +6,7 @@ Login
 
 
 {% block css %}
-:root {
+ :root {
     --background: #1a1a2e;
     --color: #ffffff;
     --primary-color: #0f3460;
@@ -48,7 +48,7 @@ h1 {
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
+} 
 
 .login-container {
     position: relative;
@@ -260,39 +260,6 @@ h1 {
 {% endblock %}
 
 {% block js %}
-const themes = [
-    {
-        background: "#1A1A2E",
-        color: "#FFFFFF",
-        primaryColor: "#0F3460"
-    },
-    {
-        background: "#461220",
-        color: "#FFFFFF",
-        primaryColor: "#E94560"
-    },
-    {
-        background: "#192A51",
-        color: "#FFFFFF",
-        primaryColor: "#967AA1"
-    },
-    {
-        background: "#F7B267",
-        color: "#000000",
-        primaryColor: "#F4845F"
-    },
-    {
-        background: "#F25F5C",
-        color: "#000000",
-        primaryColor: "#642B36"
-    },
-    {
-        background: "#231F20",
-        color: "#FFF",
-        primaryColor: "#BB4430"
-    }
-];
-
 const setTheme = (theme) => {
     const root = document.querySelector(":root");
     root.style.setProperty("--background", theme.background);

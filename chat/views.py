@@ -16,7 +16,7 @@ def index(request,group_name):
     print('Group',group)
     chats=[]
     if group is None:
-        group = Group.objects.create(name=group_name)
+        group = Group.objects.create(name=group_name,created_by=request.user.profile)
     else:
         chats = Chat.objects.filter(group=group)
         print('chats in view ....',chats)

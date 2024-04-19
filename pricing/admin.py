@@ -10,7 +10,7 @@ class FeatureAdmin(admin.StackedInline):
 
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('name','description','price','duration','active','created_at','updated_at')
+    list_display = ('name','description','price','duration','chat_room_limit','active','created_at','updated_at')
     list_filter = ('name','description','price','duration','created_at','updated_at')
     # inlines = (FeatureAdmin,)
 admin.site.register(Plan,PlanAdmin)

@@ -3,6 +3,8 @@
 {% block title %}
     brainwaveio | Landing Page Template
 {% endblock %}
+{% block css %}{% endblock %}
+
 
 {% block content %}
 <div data-bs-target="#navbar" data-bs-spy="scroll" tabindex="0">
@@ -227,7 +229,7 @@
                                 <div class="col-12 swiper-slide">
                                     <div class="d-flex justify-content-center gap-2">
                                         <div class="d-flex flex-column flex-lg-row gap-2 px-4 py-x1 review-card-1">
-                                            <div class="text-center text-lg-start"><img class="card-image rounded-circle object-fit-cover" src="assets/img/feedback/reviewer_1.webp" alt="" /></div>
+                                            <div class="text-center text-lg-start"><img class="card-image rounded-circle object-fit-cover" src="{% static 'assets/img/feedback/reviewer_1.webp' %}" alt="" /></div>
                                             <div class="text-center text-lg-start">
                                                 <p class="fs-8 mb-2 lh-lg line-clamp-3 text-1100">“The chat app is amazing! It has greatly improved communication within our remote team.”</p>
                                                 <p class="text-800 lh-xl mb-0">John Doe</p>
@@ -263,13 +265,10 @@
                         <ul class="list-unstyled fs-8 lh-xl fw-light text-1100 ls-1">
                             {% for feature in plan.features.all %}
                             <li class="py-x1 px-1 border-top">{{feature.name}}</li>
-                            {% endfor %} {
-                            {% comment %} <li class="py-x1 px-1 border-top">100 GB Cloud Storage</li>
-                            <li class="py-x1 px-1 border-top">Unlimited Meetings</li>
-                            <li class="py-x1 px-1 border-top">Premium Support</li> {% endcomment %}
+                            {% endfor %} 
                             <li class="mt-1 d-grid"><a class="btn btn-secondary btn-lg lh-xl"href="{% url "purchase_plan" plan_id=plan.id %}">Get Started Now</a></li>
                         </ul>
-                        l
+                        
                     </div>
                     {% endfor %}
                     <div class="p-x1 text-center bg-white border shadow-sm rounded-2 pricing-card">
@@ -389,3 +388,7 @@
 
 
 {% endblock %}
+
+<script>
+{% block js %}{% endblock %}
+</script>

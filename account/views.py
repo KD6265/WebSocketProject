@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,Http404
 from django.contrib.auth.decorators import login_required
 from chat.forms import GroupForm
-from chat.models import Group
+from chat.models import Group,Chat
+from django.db.models import Count
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -54,5 +56,10 @@ def user_logout(request):
 def dashboard(request):
     form = GroupForm()
     baseurl = request.build_absolute_uri()
+    from django.db.models import Count
+
+    group_count = Group.objects.filter(created_by=request.user.profile).count()
+
+    print('group count : ' ,group_count)
     print('dashboard baseur ', baseurl)
     return render(request, 'account/dashboard.html', {'form': form})

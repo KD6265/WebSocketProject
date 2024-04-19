@@ -2,25 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% comment %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% endcomment %}
     <title>{% block title %}brainwaveio | Landing Page Template{% endblock %}</title>
-    {% comment %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% endcomment %}
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- =============================================== -->
-    <!-- Document Title -->
-    <!-- =============================================== -->
-    {% comment %}
-    <title>brainwaveio | Landing Page Template</title>
-    {% endcomment %}
-
     <!-- =============================================== -->
     <!-- Favicons -->
     <!-- =============================================== -->
@@ -45,6 +29,7 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 
     <!-- Add any additional CSS or meta tags here -->
+    <style>{% block css %}{% endblock %}</style>
 
 </head>
 <body>
@@ -52,6 +37,21 @@
     <main class="main" id="top">
         <div class="content">
             {% include 'base/header.html' %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert" style="margin-top: 83px;">
+                <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message | safe }}
+            </div>
+             {% endfor %}
+            {% comment %} {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endcomment %}
 
             <!-- Content block, to be overridden by child templates -->
             <div class="content">
@@ -67,6 +67,7 @@
     <!-- =============================================== -->
     <!-- JavaScripts -->
     <!-- =============================================== -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'vendors/popper/popper.min.js' %}"></script>
     <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
     <script src="{% static 'vendors/is/is.min.js' %}"></script>
@@ -75,7 +76,14 @@
     <script src="{% static 'vendors/lodash/lodash.min.js' %}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{% static 'assets/js/theme.js' %}"></script>
+    <script type="text/javascript"> 
+        setTimeout(function () { 
+            $('.alert').alert('close'); 
+        }, 3000); 
+    </script> 
 
     <!-- Add any additional scripts here -->
+    <script>{% block js %}{% endblock %}</script>
+    
 </body>
 </html>

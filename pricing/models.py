@@ -10,6 +10,7 @@ class Plan(models.Model):
     description = models.TextField(blank=True,null=True,max_length=200) 
     price = models.IntegerField()
     duration = models.IntegerField(help_text="duration in months",default=1)
+    chat_room_limit = models.PositiveIntegerField(default=0,help_text="0 for unlimited rooms")
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
