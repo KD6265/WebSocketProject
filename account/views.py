@@ -52,14 +52,27 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
+from django.db.models import Count
 @login_required
 def dashboard(request):
     form = GroupForm()
     baseurl = request.build_absolute_uri()
-    from django.db.models import Count
 
     group_count = Group.objects.filter(created_by=request.user.profile).count()
 
     print('group count : ' ,group_count)
     print('dashboard baseur ', baseurl)
-    return render(request, 'account/dashboard.html', {'form': form})
+    # return render(request, 'accoun
+    # t/dashboard.html', {'form': form})
+    return render(request, 'account/dashboard/pages/dashboard.html', {'form': form})
+
+# profile
+@login_required
+def profile(request):
+    return render(request, 'account/dashboard/pages/profile.html')
+
+
+@login_required
+def chat(request):
+    return render(request, 'account/dashboard/pages/chat.html')
+        

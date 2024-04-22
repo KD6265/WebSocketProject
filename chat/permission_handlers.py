@@ -23,14 +23,14 @@ def user_is_authenticated_and_active(function):
             return redirect('login')
         elif not user.profile.active:
             messages.error(request, 'Your Plan is not active. Please first upgrade your plan')
-            return redirect("dashboard")
+            return redirect("account:dashboard")
         elif user.profile.selected_plan.chat_room_limit == 0:
             messages.info(request, 'You have successfully joined the group.')
             return function(request, *args, **kwargs)
         elif user.profile.selected_plan.chat_room_limit <= user.profile.created_by.count() :
             if str(user) != str(group_author):
                 messages.error(request, 'You have reached your chat room limit. Upgrade your plan or join your own room.')
-                return redirect("dashboard")
+                return redirect("account:dashboard")
             else:    
                 messages.success(request, 'You have successfully joined the group.')
                 messages.info(request, 'You have reached your chat room limit.')

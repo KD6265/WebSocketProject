@@ -1,0 +1,63 @@
+ <!--**********************************
+            Sidebar start
+***********************************-->
+{% load static %}
+{% load i18n %}
+<div class="quixnav">
+    <div class="quixnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li class="nav-label first">{% trans "Main Menu" %}</li>
+            {% comment %} <li><a class="has-arrow" href="#" aria-expanded="false"><i {% endcomment %}
+            <li><a class="has-arrow" href="{% url 'account:dashboard' %}" aria-expanded="false"><i
+                        class="icon icon-single-04"></i><span class="nav-text">{% trans "Dashboard" %}</span></a>
+                {% comment %} <ul aria-expanded="false"> {% endcomment %}
+                    {% comment %} <li><a href="{% url 'dashboard:index' %}">{{ "Dashboard 1"|translate }}</a></li> {% endcomment %}
+                    {% comment %} <li><a href="{% url 'dashboard:index2' %}">{{ "Dashboard 2"|translate }}</a></li> {% endcomment %}
+                {% comment %} </ul> {% endcomment %}
+            </li>
+            <li class="nav-label">{% trans "Apps" %}</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-app-store"></i>
+                    <span class="nav-text">{% trans "Apps" %}</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li>
+                        <a href="{% url 'account:profile' %}">
+                            <i class="bi bi-person"></i>
+                            {% trans "Profile" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'chat:index'  %}">
+                            <i class="bi bi-chat"></i>
+                            {% trans "Chat" %}
+                        </a>
+                    </li>    
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        {% trans "Email" %}</a>
+                        <ul aria-expanded="false">
+                            {% comment %} <li><a href="#"{% trans "Inbox" %}</a></li> {% endcomment %}
+
+                            {% comment %} <li><a href="{% url 'account:email' %}">{{ "Compose"|translate }}</a></li>
+                            <li><a href="{% url 'account:inbox' %}">{{ "Inbox"|translate }}</a></li>
+                            <li><a href="{% url 'account:read' %}">{{ "Read"|translate }}</a></li> {% endcomment %}
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            {% comment %} <li class="nav-label"></li>{% trans "Components" %}
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-world-2"></i><span class="nav-text">{% trans "Bootstrap" %}</span></a>
+                        <ul aria-expanded="false">
+                    <li><a href="#">{% trans "Accordion" %}</a></li>
+                    
+                </ul>
+            </li> {% endcomment %}
+        </ul>
+    </div>
+</div>
+
+<!--**********************************
+    Sidebar end
+***********************************-->
